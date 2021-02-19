@@ -79,6 +79,10 @@ public class NameCodesScript : MonoBehaviour
 
     void LeftPress()
     {
+        if (moduleSolved)
+        {
+            return;
+        }
         Audio.PlaySoundAtTransform("flip", transform);
         leftArrow.AddInteractionPunch(0.2f);
         currentPosition = (currentPosition - leftIndex + stringLength) % stringLength;
@@ -87,6 +91,10 @@ public class NameCodesScript : MonoBehaviour
     }
     void RightPress()
     {
+        if (moduleSolved)
+        {
+            return;
+        }
         Audio.PlaySoundAtTransform("flip", transform);
         rightArrow.AddInteractionPunch(0.2f);
         currentPosition = (currentPosition + rightIndex) % stringLength;
@@ -120,7 +128,7 @@ public class NameCodesScript : MonoBehaviour
 
     KMSelectable WhichButton(string direction)
     {
-        if (direction == "left") { return leftArrow; }
+        if (direction == "LEFT" || direction == "L") { return leftArrow; }
         else return rightArrow;
     }
 
@@ -130,12 +138,12 @@ public class NameCodesScript : MonoBehaviour
 
     IEnumerator ProcessTwitchCommand(string Command)
     {
-        parameters = Command.Split(' ');
+        parameters = Command.Trim().ToUpperInvariant().Split(' ');
         if (parameters.Length > 2 | parameters.Length < 1)
         {
             yield break;
         }
-        else if (parameters[0] == "left" | parameters[0] == "right")
+        else if (parameters[0] == "LEFT" | parameters[0] == "RIGHT")
         {
             if (parameters.Length == 1)
             {
@@ -162,7 +170,7 @@ public class NameCodesScript : MonoBehaviour
                 }
             }
         }
-        else if (parameters[0] == "submit" && parameters.Length == 2)
+        else if (parameters[0] == "SUBMIT" && parameters.Length == 2)
         {
             if ("0123456789".Contains(parameters[1]))
             {
