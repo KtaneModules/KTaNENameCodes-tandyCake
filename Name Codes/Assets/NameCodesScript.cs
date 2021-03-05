@@ -55,7 +55,7 @@ public class NameCodesScript : MonoBehaviour
         leftIndex = UnityEngine.Random.Range(2, 6);
         rightIndex = UnityEngine.Random.Range(2, 6);
 
-        if ((Convert.ToDouble(leftIndex) / Convert.ToDouble(rightIndex) % 1 == 0) | Convert.ToDouble(rightIndex) / Convert.ToDouble(leftIndex) % 1 == 0)
+        if ((Convert.ToDouble(leftIndex) / Convert.ToDouble(rightIndex) % 1 == 0) || (Convert.ToDouble(rightIndex) / Convert.ToDouble(leftIndex) % 1 == 0)) //Checks if the indices are equal or have factors.
         {
             GenerateIndices();
         }
@@ -65,7 +65,7 @@ public class NameCodesScript : MonoBehaviour
     void GenerateString()
     {
         words.Shuffle();
-        chosenString = words[0] + words[1] + words[2] + words[3] + words[4];
+        chosenString = words.Take(5).Join("");
         stringLength = chosenString.Length;
         Debug.LogFormat("[Name Codes #{0}] Your chosen string is {1}.", moduleId, chosenString);
     }
@@ -108,19 +108,20 @@ public class NameCodesScript : MonoBehaviour
             return;
         }
         submitButton.AddInteractionPunch(0.75f);
-        if (Mathf.FloorToInt(Bomb.GetTime()) % 10 == solution)
+        int digitOnSubmit = Mathf.FloorToInt(Bomb.GetTime()) % 10;
+        if (digitOnSubmit == solution)
         {
 
             Audio.PlaySoundAtTransform("solve", transform);
             if (UnityEngine.Random.Range(0, 100) == 0) { displayText.text = "You are\nJon enough."; displayText.characterSize = 1; displayText.color = new Color(1, 0, 0, 1); }
             else { displayText.text = "!!"; }   
             moduleSolved = true;
-            Debug.LogFormat("[Name Codes #{0}] You submitted when the last digit of the countdown timer was {1}. Module solved.", moduleId, Mathf.FloorToInt(Bomb.GetTime()) % 10);
+            Debug.LogFormat("[Name Codes #{0}] You submitted when the last digit of the countdown timer was {1}. Module solved.", moduleId, digitOnSubmit);
             GetComponent<KMBombModule>().HandlePass();
         }
         else
         {
-            Debug.LogFormat("[Name Codes #{0}] You submitted when the last digit of the countdown timer was {1}. That was incorrect.", moduleId, Mathf.FloorToInt(Bomb.GetTime()) % 10);
+            Debug.LogFormat("[Name Codes #{0}] You submitted when the last digit of the countdown timer was {1}. That was incorrect.", moduleId, digitOnSubmit);
             GetComponent<KMBombModule>().HandleStrike();
         }
 
@@ -139,11 +140,11 @@ public class NameCodesScript : MonoBehaviour
     IEnumerator ProcessTwitchCommand(string Command)
     {
         parameters = Command.Trim().ToUpperInvariant().Split(' ');
-        if (parameters.Length > 2 | parameters.Length < 1)
+        if (parameters.Length > 2 || parameters.Length < 1)
         {
             yield break;
         }
-        else if (parameters[0] == "LEFT" | parameters[0] == "RIGHT")
+        else if (new string[] { "LEFT", "RIGHT", "L", "R" }.Contains(parameters[0]))
         {
             if (parameters.Length == 1)
             {
@@ -151,16 +152,9 @@ public class NameCodesScript : MonoBehaviour
             }
             else
             {
-                bool invalid = false;
-                foreach (char letter in parameters[1])
+                if (parameters[1].All(x => "0123456789".Contains(x)) && int.Parse(parameters[1]) <= 50) //Checks if the number is actually a number, and checks that the number is not comically large.
                 {
-                    if (!"0123456789".Contains(letter))
-                    {
-                        invalid = true;
-                    }
-                }
-                if (!invalid && int.Parse(parameters[1]) <= 50)
-                {
+                    yield return null;
                     for (int i = 0; i < int.Parse(parameters[1]); i++)
                     {
                         WhichButton(parameters[0]).OnInteract();
@@ -172,12 +166,14 @@ public class NameCodesScript : MonoBehaviour
         }
         else if (parameters[0] == "SUBMIT" && parameters.Length == 2)
         {
+
             if ("0123456789".Contains(parameters[1]))
             {
+                yield return null;
                 int submissionDigit = int.Parse(parameters[1]);
                 while (Mathf.FloorToInt(Bomb.GetTime()) % 10 == submissionDigit)
                 {
-                    yield return "trycancel";
+                    yield return "trycancel"; //Fixes that obscure bug that got square button on ON.
                 }
                 while (Mathf.FloorToInt(Bomb.GetTime()) % 10 != submissionDigit)
                 {
