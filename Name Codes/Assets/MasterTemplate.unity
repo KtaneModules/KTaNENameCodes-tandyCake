@@ -178,18 +178,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!114 &452586252 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114320102115928720, guid: 85a2c623b85c45f4fbcbd5bedc7a4b15,
-    type: 2}
-  m_PrefabInternal: {fileID: 1574586566}
-  m_Script: {fileID: 2144496390, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
---- !u!114 &452586253 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114069291951675820, guid: 85a2c623b85c45f4fbcbd5bedc7a4b15,
-    type: 2}
-  m_PrefabInternal: {fileID: 1574586566}
-  m_Script: {fileID: -1675560866, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
 --- !u!1 &721905560
 GameObject:
   m_ObjectHideFlags: 0
@@ -367,21 +355,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 114362154893983906, guid: 85a2c623b85c45f4fbcbd5bedc7a4b15,
-        type: 2}
-      propertyPath: Bomb
-      value: 
-      objectReference: {fileID: 452586252}
-    - target: {fileID: 114362154893983906, guid: 85a2c623b85c45f4fbcbd5bedc7a4b15,
-        type: 2}
-      propertyPath: Audio
-      value: 
-      objectReference: {fileID: 452586253}
-    - target: {fileID: 23199263136058442, guid: 85a2c623b85c45f4fbcbd5bedc7a4b15,
-        type: 2}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 34a6bed4a1ab45f4da880a376f1dedfb, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 85a2c623b85c45f4fbcbd5bedc7a4b15, type: 2}
   m_IsPrefabParent: 0
