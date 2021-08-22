@@ -57,8 +57,7 @@ public class NameCodesScript : MonoBehaviour
 
     void GenerateString()
     {
-        words.Shuffle();
-        chosenString = words.Take(5).Join("");
+        chosenString = words.Shuffle().Take(5).Join("");
         stringLength = chosenString.Length;
         Debug.LogFormat("[Name Codes #{0}] Your chosen string is {1}.", moduleId, chosenString);
     }
@@ -71,23 +70,21 @@ public class NameCodesScript : MonoBehaviour
 
     void LeftPress()
     {
-        leftArrow.AddInteractionPunch(0.2f);
-        Audio.PlaySoundAtTransform("flip", transform);
-        if (moduleSolved)
-            return;
         currentPosition = (currentPosition - leftIndex + stringLength) % stringLength;
-        currentLetter = chosenString[currentPosition];
-        displayText.text = currentLetter.ToString();
+        ArrowPress(leftArrow);
     }
     void RightPress()
     {
-        rightArrow.AddInteractionPunch(0.2f);
-        Audio.PlaySoundAtTransform("flip", transform);
-        if (moduleSolved)
-            return;
         currentPosition = (currentPosition + rightIndex) % stringLength;
+        ArrowPress(rightArrow);
+    }
+    void ArrowPress(KMSelectable btn)
+    {
+        btn.AddInteractionPunch(0.2f);
+        Audio.PlaySoundAtTransform("flip", btn.transform);
         currentLetter = chosenString[currentPosition];
-        displayText.text = currentLetter.ToString();
+        if (!moduleSolved)
+            displayText.text = currentLetter.ToString();
     }
     void SubmitPress()
     {
