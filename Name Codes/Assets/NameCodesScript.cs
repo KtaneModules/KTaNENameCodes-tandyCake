@@ -96,7 +96,7 @@ public class NameCodesScript : MonoBehaviour
         {
             moduleSolved = true;
             Audio.PlaySoundAtTransform("solve", transform);
-            if (UnityEngine.Random.Range(0, 100) == 0) { displayText.text = "You are\nJon enough."; displayText.characterSize = 1; displayText.color = new Color(1, 0, 0, 1); }
+            if (UnityEngine.Random.Range(0, 100) == 0) { displayText.text = "You are\nJon enough."; displayText.characterSize = 0.9f; displayText.color = Color.red; }
             else displayText.text = "!!";   
             Debug.LogFormat("[Name Codes #{0}] You submitted when the last digit of the countdown timer was {1}. Module solved.", moduleId, digitOnSubmit);
             GetComponent<KMBombModule>().HandlePass();
@@ -110,7 +110,8 @@ public class NameCodesScript : MonoBehaviour
 
     KMSelectable WhichButton(string direction)
     {
-        if (direction == "LEFT" || direction == "L") return leftArrow;
+        if (direction == "LEFT" || direction == "L") 
+            return leftArrow;
         else return rightArrow;
     }
 
@@ -136,12 +137,16 @@ public class NameCodesScript : MonoBehaviour
         }
         else if (parameters.Count == 2 && possibleDirections.Contains(parameters[0]) && parameters[1].All(x => "1234567890".Contains(x)))
         {
-            yield return null;
-            for (int i = 0; i < int.Parse(parameters[1]); i++)
+            int value;
+            if (int.TryParse(parameters[1], out value))
             {
-                WhichButton(parameters.First()).OnInteract();
-                yield return "trycancel";
-                yield return new WaitForSeconds(0.75f);
+                yield return null;
+                for (int i = 0; i < value; i++)
+                {
+                    WhichButton(parameters.First()).OnInteract();
+                    yield return "trycancel";
+                    yield return new WaitForSeconds(0.75f);
+                }
             }
         }
         else if (parameters.All(x => possibleDirections.Contains(x)))
