@@ -13,9 +13,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: nameCodes
   title: Name Codes
-  author: Danny7007
-  description: "The game's aim: change names.\n\nModule Created by Danny7007\r\nmoduleID:
+  author: tandyCake
+  description: "The game's aim: change names.\n\nModule Created by tandyCake\r\nmoduleID:
     nameCodes\nManual can be found on ktane.timwi.de\r\n"
-  version: 1.1.3
+  version: 1.2.0
   outputFolder: build
   previewImage: {fileID: 2800000, guid: 8233450d68552664595d151630a96318, type: 3}

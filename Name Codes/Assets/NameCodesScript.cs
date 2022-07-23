@@ -9,11 +9,13 @@ public class NameCodesScript : MonoBehaviour
 {
     public KMBombInfo Bomb;
     public KMAudio Audio;
+    public KMRuleSeedable Ruleseed;
     public KMSelectable leftArrow;
     public KMSelectable rightArrow;
     public KMSelectable submitButton;
     public TextMesh displayText;
 
+    readonly string[] allWords = { "ANGLE", "GRAVE", "BARK", "RULER", "KITE", "WHILE", "QUERY", "ARROW", "TEEPEE", "PARTY", "DIJON", "TRAVEL", "BONE", "GREEN", "SPARKS", "SPINS", "VICE", "NOMEN", "VERTIGO", "PRESET", "CRYPT", "ROYAL", "INDEX", "JEWELS", "BEES", "BARN", "FOXES", "WEASEL", "QUEASY", "PENCIL", "WINTER", "JAIL", "YOLK", "QUOTA", "BANJO", "COAX", "JAZZ", "FILES", "CAGED", "PISTOL", "CHAMP", "GLOBE", "BASKETS", "MORGUE", "GELATIN", "QUALITY", "ARRAY", "LEAN", "WEARY", "ZEALOT", "JUNGLES", "FENCE", "KINDLY", "SUNNY", "SPECIES", "AGILE", "CRAM", "VISIT", "PSYCHIC", "VIAL", "ROUTE", "FINAL", "BAGEL" };
     static int moduleIdCounter = 1;
     int moduleId;
     private bool moduleSolved;
@@ -22,7 +24,7 @@ public class NameCodesScript : MonoBehaviour
     int stringLength;
     int currentPosition;
     char currentLetter;
-    string[] words = new string[] { "ANGLE", "GRAVE", "BARK", "RULER", "KITE", "WHILE", "QUERY", "ARROW", "TEEPEE", "PARTY", "DIJON", "TRAVEL", "BONE", "GREEN", "SPARKS", "SPINS", "VICE", "NOMEN", "VERTIGO", "PRESET", "CRYPT" };
+    string[] usedWords;
     string chosenString;
     int solution;
 
@@ -36,6 +38,7 @@ public class NameCodesScript : MonoBehaviour
 
     void Start()
     {
+        SetUpRuleseed();
         GenerateString();
         GetPosition();
         GenerateIndices();
@@ -43,6 +46,27 @@ public class NameCodesScript : MonoBehaviour
         Debug.LogFormat("[Name Codes #{0}] Your solution digit is {1}.", moduleId, solution);
         displayText.text = currentLetter.ToString();
 
+    }
+    void SetUpRuleseed()
+    {
+        var rng = Ruleseed.GetRNG();
+        if (rng.Seed != 1)
+        {
+            bool invalidSetup;
+            do
+            {
+                rng.ShuffleFisherYates(allWords);
+                var lengths = new Dictionary<int, int> { { 4, 0 }, { 5, 0 }, { 6, 0 }, { 7, 0 } };
+                for (int i = 0; i < 21; i++)
+                    lengths[allWords[i].Length]++;
+                invalidSetup = lengths[7] > 2 ||
+                                lengths[6] < 3 || lengths[6] > 5 ||
+                                lengths[5] < 10 || lengths[5] > 15 ||
+                                lengths[4] < 3 || lengths[4] > 5;
+            } while (invalidSetup);
+        }
+        usedWords = allWords.Take(21).ToArray();
+        Debug.Log(usedWords.Join());
     }
 
     void GenerateIndices()
@@ -57,7 +81,7 @@ public class NameCodesScript : MonoBehaviour
 
     void GenerateString()
     {
-        chosenString = words.Shuffle().Take(5).Join("");
+        chosenString = usedWords.Shuffle().Take(5).Join("");
         stringLength = chosenString.Length;
         Debug.LogFormat("[Name Codes #{0}] Your chosen string is {1}.", moduleId, chosenString);
     }
